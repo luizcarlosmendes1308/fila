@@ -1,0 +1,151 @@
+#include <iostream>
+using namespace std;
+#include <locale.h>
+struct No {
+	float dado;
+	struct No *prox;
+};
+
+struct Fila {
+	No *ini;
+	No *fim;
+};
+
+Fila* init() {
+	Fila *f = new Fila;
+	f->ini = NULL;
+	f->fim = NULL;
+	return f;
+}
+
+int isEmpty(Fila *f) {
+	return (f->ini == NULL);
+}
+
+int count(Fila *f) {
+	int qtde = 0;
+	No *no;
+	no = f->ini;
+	while (no != NULL) {
+		qtde++;
+		no = no->prox;
+	}
+	return qtde;
+}
+
+void print(Fila *f) {
+	No *no;
+	no = f->ini;
+	while (no != NULL) {
+		cout <<"Senhas Geradas: "<< no->dado << endl;
+		no = no->prox;
+	}
+}
+
+// Colocar na fila (Queue) - ou: enfileirar
+void enqueue(Fila *f, float v) {
+	No *no = new No;
+	no->dado = v;
+	no->prox = NULL;
+	if (isEmpty(f)) {
+		f->ini = no;
+	}
+	else {
+		f->fim->prox = no;
+	}
+	f->fim = no;
+}
+
+// Retirar da fila (Queue) - ou: desenfileirar
+float dequeue(Fila *f) {
+	float ret;
+	if (isEmpty(f)) {
+		ret = -1;
+	}
+	else {
+		No *no = f->ini;
+		ret = no->dado;
+		f->ini = no->prox;
+		if (f->ini == NULL) {
+			f->fim = NULL;
+		}
+		free(no);
+	}
+	return ret;
+}
+
+void freeFila(Fila *f) {
+	No *no = f->ini;
+	while (no != NULL) {
+		No *temp = no->prox;
+		free(no);
+		no = temp;
+	}
+	free(f);
+}
+
+
+int main(int argc, char** argv)
+{
+setlocale(LC_ALL, "Portuguese");
+	Fila *filaFloat;
+	filaFloat = new Fila();
+	int op;
+	int num =0;
+	int num2= 0;
+	// cout << "Fila vazia: " << (isEmpty(filaFloat)?"SIM":"NAO") << endl;
+	// cout << "Qtde de elementos na fila: " << count(filaFloat) << endl;
+	// enqueue(filaFloat, 11.11);
+	// print(filaFloat);
+	// cout << "Valor desenfileirado: " << dequeue(filaFloat) << endl;
+ //    print(filaFloat);
+	// cout << "Fila vazia: " << (isEmpty(filaFloat)?"SIM":"NAO") << endl;
+	// cout << "Qtde de elementos na fila: " << count(filaFloat) << endl;
+ //    freeFila(filaFloat);
+   
+    do {
+    cout << "0. SAIR"<<endl;
+    cout << "1. GERAR SENHA"<<endl;
+    cout << "2. REALIZAR ATENDIMENTO"<<endl;
+    cout << "Qtde de elementos na fila: " << count(filaFloat) << endl;
+    print(filaFloat);
+    cin >> op;
+    system("CLS");
+    if (op==1){
+    	for (int i=0; i<1; i++){
+    		num+=1;
+    		cout << "-----------------------"<<endl;
+			cout << "Senha gerada com sucesso"<<endl;
+			cout << "numero :  " << num<<endl;
+			cout << "-----------------------"<<endl;
+			enqueue(filaFloat, num);
+		}
+	}
+	if (op==2){
+			for (int i=0; i<1; i++){
+        num2+=1;
+        cout << "-----------------------"<<endl;
+		cout << "Senha da vez: " << num2 <<endl;
+		cout << "atendimento realizado com sucesso"<<endl;
+		cout << "-----------------------"<<endl;
+        dequeue(filaFloat);
+			}
+	}
+    }while (op!=0);
+	
+	return 0;
+}
+
+/*
+Implementar um sistema simples de atendimento com a oferta de 3 opções através de um seletor:
+0. Sair
+1. Gerar senha
+2. Realizar atendimento
+A opção 1 deverá incrementar o controle de senhas, gerando e enfileirando a senha gerada na fila "senhasGeradas"
+
+A opção 2 deverá consumir a senha "da vez", exibindo-a na tela e enfileirando-a na fila "senhasAtendidas".
+
+Sempre que o seletor for exibido, informar a quantidade de senhas ainda aguardando atendimento.
+
+O programa só poderá ser encerrado quando a fila "senhasGeradas" estiver vazia. Ao encerrar, informar a quantidade de senhas atendidas.
+*/
